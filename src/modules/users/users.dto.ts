@@ -1,4 +1,4 @@
-export type UserCreateInput = {
+export type usersDTO = {
   email: string;
   name?: string | null;
   password: string;
