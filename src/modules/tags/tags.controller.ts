@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { TagsService } from './tags.service';
 
@@ -8,24 +8,85 @@ export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
   @Post()
-  async create(data: Prisma.TagCreateInput) {
-    return this.tagsService.create(data);
+  async create(@Body() data: Prisma.TagCreateInput) {
+    try {
+      await this.tagsService.create(data);
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+    
+  @Get(":id")
+  async findOne(@Param('id') id: number) {
+    try {
+      await this.tagsService.findOne(id);
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+
+  async findTasksByTag(@Param('id') id: number){
+    try {
+      await this.tagsService.findTasksByTag(id);
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
   }
 
   @Get()
   async findAll() {
-    return this.tagsService.findAll();
+    try {
+      await this.tagsService.findAll();
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
   }
 
-  async findOne(id: number){
-    return this.tagsService.findOne(id);
+  @Patch(":id")
+  async update(@Param('id') id: number, @Body() data: Prisma.TagUpdateInput) {
+    try {
+      await this.tagsService.update(id, data);
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
   }
 
-  async findTasksByTag(tagId: number){
-    return this.tagsService.findTasksByTag(tagId);
-
-  @Patch()
-  async update(id: number, data: Prisma.TagUpdateInput) {
-    return this.tagsService.update(id, data);
+  @Delete(":id")
+  async remove(@Param('id') id: number) {
+    try {
+      await this.tagsService.remove(id);
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
   }
 }
