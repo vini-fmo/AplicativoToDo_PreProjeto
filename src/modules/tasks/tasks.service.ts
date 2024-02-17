@@ -18,6 +18,60 @@ export class TasksService {
     return tasks;
   }
 
+  async findAllCompleted() {
+    const tasks = await this.prisma.task.findMany({
+      where: { completed: true },
+    });
+    return tasks;
+  }
+
+  findAllUncompleted() {
+    return this.prisma.task.findMany({
+      where: { completed: false },
+    });
+  }
+
+  async findAllTasksByTagId(taskId: number) {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        tags: {
+          some: {
+            id: taskId,
+          },
+        },
+      },
+    });
+    return tasks;
+  }
+
+  async findAllTasksCompletedAndbyTagId(taskId: number) {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        completed: true,
+        tags: {
+          some: {
+            id: taskId,
+          },
+        },
+      },
+    });
+    return tasks;
+  }
+
+  async findAllTasksUncompletedAndbyTagId(taskId: number) {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        completed: false,
+        tags: {
+          some: {
+            id: taskId,
+          },
+        },
+      },
+    });
+    return tasks;
+  }
+
   async findOne(id: number) {
     const task = await this.prisma.task.findUnique({
       where: { id },
@@ -43,19 +97,6 @@ export class TasksService {
   async removeAllCompleted() {
     const tasks = await this.prisma.task.deleteMany({
       where: { completed: true },
-    });
-    return tasks;
-  }
-
-  async findAllTasksByTagId(taskId: number) {
-    const tasks = await this.prisma.task.findMany({
-      where: {
-        tags: {
-          some: {
-            id: taskId,
-          },
-        },
-      },
     });
     return tasks;
   }

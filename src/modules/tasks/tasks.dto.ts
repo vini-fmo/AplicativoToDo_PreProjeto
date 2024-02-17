@@ -1,4 +1,4 @@
-export type TaskCreateInput = {
+export type tasksDTO = {
   name: string;
   completed?: boolean;
   deadline?: Date | string | null;
