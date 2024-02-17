@@ -1,12 +1,13 @@
+/*eslint-disable prettier/prettier*/
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { tagsDTO } from './tags.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TagsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: tagsDTO) {
+  async create(data: Prisma.TagCreateInput) {
     const tag = await this.prisma.tag.create({
       data,
     });
@@ -25,7 +26,24 @@ export class TagsService {
     return tag;
   }
 
-  async update(id: number, data: tagsDTO) {
+  async findTasksByTag(tagId: number) {
+    const tasks = await this.prisma.tag.findUnique({
+      where: {
+       id: tagId 
+      },
+      include: {
+        tasks: true,
+      },
+    });
+  
+    if (!tasks) {
+      throw new Error(`Tag with name ${} not found.`);
+    }
+  
+    return tasks.tasks;
+  }
+
+  async update(id: number, data: Prisma.TagUpdateInput) {
     const tag = await this.prisma.tag.update({
       where: { id },
       data,
@@ -38,17 +56,5 @@ export class TagsService {
       where: { id },
     });
     return tag;
-  }
-
-  async findAllTasksByTagId(taskId: number) {
-    const tasks = await this.prisma.task.findMany({
-      where: {
-        tags: {
-          some: {
-            id: taskId,
-          },
-        },
-      },
-    });
   }
 }
