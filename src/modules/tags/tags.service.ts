@@ -12,7 +12,7 @@ export class TagsService {
       data,
     });
 
-    if (data.name === null) {
+    if (tag.name === null) {
       throw new Error(`Tag name is required.`);
     }
     return tag;

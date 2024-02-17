@@ -21,7 +21,7 @@ model User {
 
 model Task {
   id        Int           @id @default(autoincrement())
-  name      String
+  name      String        @unique
   completed Boolean       @default(false)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
@@ -33,7 +33,7 @@ model Task {
 
 model Tag {
   id        Int           @id @default(autoincrement())
-  name      String
+  name      String        @unique
   createdAt DateTime      @default(now())
   tasks     TagsOnTasks[]
 

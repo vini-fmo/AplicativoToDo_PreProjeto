@@ -8,9 +8,10 @@ export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
   @Post()
-  async create(@Body() data: Prisma.TagCreateInput) {
+  async Create(@Body() data: Prisma.TagCreateInput) {
     try {
-      await this.tagsService.create(data);
+      const tag = await this.tagsService.create(data);
+      return tag;
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -22,9 +23,10 @@ export class TagsController {
   }
     
   @Get(":id")
-  async findOne(@Param('id') id: number) {
+  async FindOne(@Param('id') id: string) {
     try {
-      await this.tagsService.findOne(id);
+      const tag = await this.tagsService.findOne(Number(id));
+      return tag;
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -35,9 +37,10 @@ export class TagsController {
     }
   }
 
-  async findTasksByTag(@Param('id') id: number){
+  async FindtasksByTag(@Param('id') id: string){
     try {
-      await this.tagsService.findTasksByTag(id);
+      const tasks = await this.tagsService.findTasksByTag(Number(id));
+      return tasks;
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -49,9 +52,9 @@ export class TagsController {
   }
 
   @Get()
-  async findAll() {
+  async FindAll() {
     try {
-      await this.tagsService.findAll();
+      return await this.tagsService.findAll();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -63,9 +66,9 @@ export class TagsController {
   }
 
   @Patch(":id")
-  async update(@Param('id') id: number, @Body() data: Prisma.TagUpdateInput) {
+  async Update(@Param('id') id: string, @Body() data: Prisma.TagUpdateInput) {
     try {
-      await this.tagsService.update(id, data);
+      return await this.tagsService.update(Number(id) , data);
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -77,9 +80,9 @@ export class TagsController {
   }
 
   @Delete(":id")
-  async remove(@Param('id') id: number) {
+  async Remove(@Param('id') id: string) {
     try {
-      await this.tagsService.remove(id);
+      return await this.tagsService.remove(Number(id));
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,

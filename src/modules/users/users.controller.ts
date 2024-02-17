@@ -7,9 +7,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body() data: Prisma.UserCreateInput) {
+  async Create(@Body() data: Prisma.UserCreateInput) {
     try {
-      await this.usersService.create(data);
+      return await this.usersService.create(data);
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -21,9 +21,9 @@ export class UsersController {
   }
 
   @Patch(":id")
-  async update(@Param('id') id: number, @Body() data: Prisma.UserUpdateInput) {
+  async Update(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
     try {
-      await this.usersService.update(id, data);
+      return await this.usersService.update(Number(id), data);
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -35,9 +35,9 @@ export class UsersController {
   }
 
   @Delete(":id")
-  async remove(@Param('id') id: number) {
+  async Remove(@Param('id') id: string) {
     try {
-      await this.usersService.remove(id);
+      return await this.usersService.remove(Number(id));
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,

@@ -7,9 +7,9 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  async create(@Body() data: Prisma.TaskCreateInput) {    
+  async Create(@Body() data: Prisma.TaskCreateInput) {    
     try {
-      await this.tasksService.create(data);
+      return await this.tasksService.create(data);
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -21,9 +21,9 @@ export class TasksController {
   }
 
   @Get(":id")
-  async findOne(@Param('id') id: number){
+  async FindOne(@Param('id') id: string){
     try {
-      await this.tasksService.findOne(id);
+      return await this.tasksService.findOne(Number(id));
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -35,9 +35,9 @@ export class TasksController {
   }
 
   @Get()
-  async findAll() {
+  async FindAll() {
     try {
-      await this.tasksService.findAll();
+      return await this.tasksService.findAll();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -48,9 +48,9 @@ export class TasksController {
     }
   }
 
-  async findAllCompleted() {
+  async FindAllCompleted() {
     try {
-      await this.tasksService.findAllCompleted();
+      return await this.tasksService.findAllCompleted();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -61,9 +61,9 @@ export class TasksController {
     }
   }
 
-  async findAllUncompleted() {
+  async FindAllUncompleted() {
     try {
-      await this.tasksService.findAllUncompleted();
+      return await this.tasksService.findAllUncompleted();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -75,9 +75,9 @@ export class TasksController {
   }
 
   @Patch(":id")
-  async update(@Param('id') id: number, @Body() data: Prisma.TaskUpdateInput) {
+  async Update(@Param('id') id: string, @Body() data: Prisma.TaskUpdateInput) {
     try {
-      await this.tasksService.update(id, data);
+      return await this.tasksService.update(Number(id), data);
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -89,9 +89,9 @@ export class TasksController {
   }
 
   @Delete(":id")
-  async remove(@Param('id') id: number) {
+  async Remove(@Param('id') id: string) {
     try {
-      await this.tasksService.remove(id);
+      return await this.tasksService.remove(Number(id));
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
@@ -102,9 +102,9 @@ export class TasksController {
     }
   }
 
-  async removeAllCompleted () {
+  async RemoveAllCompleted () {
     try {
-      await this.tasksService.removeAllCompleted();
+      return await this.tasksService.removeAllCompleted();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,
