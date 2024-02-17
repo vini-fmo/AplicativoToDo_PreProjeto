@@ -1,7 +1,7 @@
 /*eslint-disable prettier/prettier*/
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { Prisma } from '@prisma/client';
+import { PrismaService } from '../../database/PrismaService';
 
 @Injectable()
 export class TagsService {
@@ -11,11 +11,18 @@ export class TagsService {
     const tag = await this.prisma.tag.create({
       data,
     });
+
+    if (data.name === null) {
+      throw new Error(`Tag name is required.`);
+    }
     return tag;
   }
 
   async findAll() {
     const tags = await this.prisma.tag.findMany();
+    if (!tags) {
+      throw new Error(`No tags found.`);
+    }
     return tags;
   }
 
@@ -45,7 +52,6 @@ export class TagsService {
     else if (tasks.tasks.length === 0) {
       throw new Error(`No tasks found for tag with name ${tasks.name}.`);
     }
-    
     return tasks.tasks;
   }
 
@@ -58,7 +64,9 @@ export class TagsService {
     if (!tag) {
       throw new Error(`Tag with id ${id} not found.`);
     }
-
+    else if (data.name === null) {
+      throw new Error(`Tag name is required.`);
+    }
     return tag;
   }
 
