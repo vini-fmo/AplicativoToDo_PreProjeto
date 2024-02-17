@@ -23,6 +23,9 @@ export class TagsService {
     const tag = await this.prisma.tag.findUnique({
       where: { id },
     });
+    if (!tag) {
+      throw new Error(`Tag with id ${id} not found.`);
+    }
     return tag;
   }
 
@@ -37,9 +40,12 @@ export class TagsService {
     });
   
     if (!tasks) {
-      throw new Error(`Tag with name ${} not found.`);
+      throw new Error(`Tag with name ${tasks.name} not found.`);
     }
-  
+    else if (tasks.tasks.length === 0) {
+      throw new Error(`No tasks found for tag with name ${tasks.name}.`);
+    }
+    
     return tasks.tasks;
   }
 
@@ -48,6 +54,11 @@ export class TagsService {
       where: { id },
       data,
     });
+
+    if (!tag) {
+      throw new Error(`Tag with id ${id} not found.`);
+    }
+
     return tag;
   }
 
@@ -55,6 +66,10 @@ export class TagsService {
     const tag = await this.prisma.tag.delete({
       where: { id },
     });
+
+    if (!tag) {
+      throw new Error(`Tag with id ${id} not found.`);
+    }
     return tag;
   }
 }
