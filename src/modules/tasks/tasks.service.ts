@@ -1,14 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/PrismaService';
+import { tasksDTO } from './tasks.dto';
 
 @Injectable()
 export class TasksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, tasksDTO: tasksDTO) {}
 
-  async create(data: Prisma.TaskCreateInput) {
+  async create({ data, tags }: { data: tasksDTO, tags: string[] }) {
     const task = await this.prisma.task.create({
-      data,
+      data: {
+        ...data,
+        tags: {
+          connectOrCreate: tags.map((tagName) => ({
+              where: { name: tagName },
+              create: { name: tagName },
+            }
+          ))
+        }
+      }
     });
     if (data.name === null) {
       throw new Error(`Task title is required.`);

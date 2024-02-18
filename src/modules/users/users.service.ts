@@ -16,6 +16,14 @@ export class UsersService {
     return user;
   }
 
+  async findAll() {
+    const users = await this.prisma.user.findMany();
+    if (!users) {
+      throw new Error(`No users found.`);
+    }
+    return users;
+  }
+
   async update(id: number, data: Prisma.UserUpdateInput) {
     const user = await this.prisma.user.update({
       where: { id },

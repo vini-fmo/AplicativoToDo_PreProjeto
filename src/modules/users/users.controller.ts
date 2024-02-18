@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { UsersService } from './users.service';
 
@@ -10,6 +10,20 @@ export class UsersController {
   async Create(@Body() data: Prisma.UserCreateInput) {
     try {
       return await this.usersService.create(data);
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+
+  @Get()
+  async FindAll() {
+    try {
+      return await this.usersService.findAll();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,

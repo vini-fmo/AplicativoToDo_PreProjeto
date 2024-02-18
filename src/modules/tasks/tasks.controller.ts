@@ -20,20 +20,6 @@ export class TasksController {
     }
   }
 
-  @Get(":id")
-  async FindOne(@Param('id') id: string){
-    try {
-      return await this.tasksService.findOne(Number(id));
-    } catch (error) { 
-      throw new HttpException({
-        status: HttpStatus.FORBIDDEN,
-        error: error.message,
-      }, HttpStatus.FORBIDDEN, {
-        cause: error
-      });
-    }
-  }
-
   @Get()
   async FindAll() {
     try {
@@ -48,6 +34,21 @@ export class TasksController {
     }
   }
 
+  @Get(":id")
+  async FindOne(@Param('id') id: string){
+    try {
+      return await this.tasksService.findOne(Number(id));
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+
+  @Get('completed/0')
   async FindAllCompleted() {
     try {
       return await this.tasksService.findAllCompleted();
@@ -61,6 +62,7 @@ export class TasksController {
     }
   }
 
+  @Get('uncompleted/0')
   async FindAllUncompleted() {
     try {
       return await this.tasksService.findAllUncompleted();
