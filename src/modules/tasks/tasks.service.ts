@@ -5,23 +5,48 @@ import { tasksDTO } from './tasks.dto';
 
 @Injectable()
 export class TasksService {
-  constructor(private prisma: PrismaService, tasksDTO: tasksDTO) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create({ data, tags }: { data: tasksDTO, tags: string[] }) {
+  async create(data: tasksDTO) { 
+    const { name, completed, createdAt, updatedAt, tags } = data;
+    
     const task = await this.prisma.task.create({
       data: {
-        ...data,
-        tags: {
-          connectOrCreate: tags.map((tagName) => ({
-              where: { name: tagName },
-              create: { name: tagName },
-            }
-          ))
-        }
-      }
+        name,
+        completed,
+        createdAt,
+        updatedAt,
+      },
     });
-    if (data.name === null) {
+
+    async function criaEOuConectaTagsInformadasATaskFornecida(task: tasksDTO, tags: string[]) {
+      tags.forEach(async tag => {
+        const TagThatExists = await this.prisma.tag.findFirst({
+          where: { name: tag }
+        });
+        if ( !TagThatExists ) {
+          const newTag = await this.prisma.tag.create({ data: { name: tag } });
+          const relationTaskTags = await this.prisma.tagsOnTasks.create({ 
+            data: { 
+              task: { connect: { id: task.id } },
+              tag: { connect: { id: newTag.id } }
+            }
+          })
+      } else { 
+          const relationTaskTags = await this.prisma.tagsOnTasks.create({ 
+            data: { 
+              task: { connect: { id: task.id },
+              tag: { connect: { id: TagThatExists.id } }}
+            },
+          });
+        }
+      })
+    }
+
+    if (!data.name) {
       throw new Error(`Task title is required.`);
+    } else if (tags) {
+      criaEOuConectaTagsInformadasATaskFornecida(task, tags); // Se houver tags informadas, verifica se a tag existe e cria a relação entre a task e a tag ou cria a tag e a relação entre a task e a tag.
     }
     return task;
   }

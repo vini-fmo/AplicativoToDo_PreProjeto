@@ -46,7 +46,6 @@ model TagsOnTasks {
   tag        Tag      @relation(fields: [tagId], references: [id])
   tagId      Int // relation scalar field (used in the `@relation` attribute above)
   assignedAt DateTime @default(now())
-  assignedBy String
 
   @@id([taskId, tagId])
 }
