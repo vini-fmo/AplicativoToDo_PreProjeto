@@ -32,6 +32,7 @@ export class TasksService {
               tag: { connect: { id: newTag.id } }
             }
           })
+          return relationTaskTags;
       } else { 
           const relationTaskTags = await this.prisma.tagsOnTasks.create({ 
             data: { 
@@ -39,6 +40,7 @@ export class TasksService {
               tag: { connect: { id: TagThatExists.id } }}
             },
           });
+          return relationTaskTags;
         }
       })
     }
