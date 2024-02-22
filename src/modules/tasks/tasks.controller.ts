@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { TasksService } from './tasks.service';
 import { tasksDTO } from './tasks.dto';
+import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
@@ -49,7 +49,7 @@ export class TasksController {
     }
   }
 
-  @Get('completed/0')
+  @Get('completed/')
   async FindAllCompleted() {
     try {
       return await this.tasksService.findAllCompleted();
@@ -63,7 +63,7 @@ export class TasksController {
     }
   }
 
-  @Get('uncompleted/0')
+  @Get('uncompleted/')
   async FindAllUncompleted() {
     try {
       return await this.tasksService.findAllUncompleted();
@@ -105,6 +105,7 @@ export class TasksController {
     }
   }
 
+  @Delete('completed/')
   async RemoveAllCompleted () {
     try {
       return await this.tasksService.removeAllCompleted();

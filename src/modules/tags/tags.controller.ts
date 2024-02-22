@@ -21,6 +21,20 @@ export class TagsController {
       });
     }
   }
+
+  @Get()
+  async FindAll() {
+    try {
+      return await this.tagsService.findAll();
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
     
   @Get(":id")
   async FindOne(@Param('id') id: string) {
@@ -37,24 +51,11 @@ export class TagsController {
     }
   }
 
+  @Get("tasks/:id")
   async FindtasksByTag(@Param('id') id: string){
     try {
       const tasks = await this.tagsService.findTasksByTag(Number(id));
       return tasks;
-    } catch (error) { 
-      throw new HttpException({
-        status: HttpStatus.FORBIDDEN,
-        error: error.message,
-      }, HttpStatus.FORBIDDEN, {
-        cause: error
-      });
-    }
-  }
-
-  @Get()
-  async FindAll() {
-    try {
-      return await this.tagsService.findAll();
     } catch (error) { 
       throw new HttpException({
         status: HttpStatus.FORBIDDEN,

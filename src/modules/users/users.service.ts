@@ -24,6 +24,34 @@ export class UsersService {
     return users;
   }
 
+  async findOne(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      throw new Error(`User with id ${id} not found.`);
+    }
+    return user;
+  }
+
+  async findAllTasksByUser(userId: number) {
+    const tasks = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        tasks: true,
+      },
+    });
+    if (!tasks) {
+      throw new Error(`User with id ${userId} not found.`);
+    }
+    else if (tasks.tasks.length === 0) {
+      throw new Error(`No tasks found for user with id ${userId}.`);
+    }
+    return tasks.tasks;
+  }
+
   async update(id: number, data: Prisma.UserUpdateInput) {
     const user = await this.prisma.user.update({
       where: { id },

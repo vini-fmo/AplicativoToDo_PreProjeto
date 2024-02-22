@@ -34,6 +34,35 @@ export class UsersController {
     }
   }
 
+  @Get(":id")
+  async FindOne(@Param('id') id: string) {
+    try {
+      return await this.usersService.findOne(Number(id));
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+
+
+  @Get("tasks/:id")
+  async FindTasksByUser(@Param('id') id: string) {
+    try {
+      return await this.usersService.findAllTasksByUser(Number(id));
+    } catch (error) { 
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: error.message,
+      }, HttpStatus.FORBIDDEN, {
+        cause: error
+      });
+    }
+  }
+
   @Patch(":id")
   async Update(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
     try {

@@ -1,55 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/PrismaService';
-import { tasksDTO } from './tasks.dto';
 
 @Injectable()
 export class TasksService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: tasksDTO) { 
-    const { name, completed, createdAt, updatedAt, tags } = data;
-    
+  async create(data: Prisma.TaskCreateInput) {
     const task = await this.prisma.task.create({
-      data: {
-        name,
-        completed,
-        createdAt,
-        updatedAt,
-      },
+      data,
     });
-
-    async function criaEOuConectaTagsInformadasATaskFornecida(task: tasksDTO, tags: string[]) {
-      tags.forEach(async tag => {
-        const TagThatExists = await this.prisma.tag.findFirst({
-          where: { name: tag }
-        });
-        if ( !TagThatExists ) {
-          const newTag = await this.prisma.tag.create({ data: { name: tag } });
-          const relationTaskTags = await this.prisma.tagsOnTasks.create({ 
-            data: { 
-              task: { connect: { id: task.id } },
-              tag: { connect: { id: newTag.id } }
-            }
-          })
-          return relationTaskTags;
-      } else { 
-          const relationTaskTags = await this.prisma.tagsOnTasks.create({ 
-            data: { 
-              task: { connect: { id: task.id },
-              tag: { connect: { id: TagThatExists.id } }}
-            },
-          });
-          return relationTaskTags;
-        }
-      })
-    }
-
-    if (!data.name) {
+    if (data.name === null) {
       throw new Error(`Task title is required.`);
-    } else if (tags) {
-      criaEOuConectaTagsInformadasATaskFornecida(task, tags); // Se houver tags informadas, verifica se a tag existe e cria a relação entre a task e a tag ou cria a tag e a relação entre a task e a tag.
-    }
+    } 
     return task;
   }
 
@@ -116,6 +79,7 @@ export class TasksService {
   }
 
   async removeAllCompleted() {
+    console.log("PAPAI")
     const tasks = await this.prisma.task.deleteMany({
       where: { completed: true },
     });
