@@ -105,7 +105,7 @@ export class TasksController {
     }
   }
 
-  @Delete('completed/')
+  @Delete('completed/value=0')
   async RemoveAllCompleted () {
     try {
       return await this.tasksService.removeAllCompleted();

@@ -79,7 +79,6 @@ export class TasksService {
   }
 
   async removeAllCompleted() {
-    console.log("PAPAI")
     const tasks = await this.prisma.task.deleteMany({
       where: { completed: true },
     });
