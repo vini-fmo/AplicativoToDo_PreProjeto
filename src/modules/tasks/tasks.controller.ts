@@ -49,7 +49,7 @@ export class TasksController {
     }
   }
 
-  @Get('completed/')
+  @Get('completed/=true')
   async FindAllCompleted() {
     try {
       return await this.tasksService.findAllCompleted();
@@ -63,7 +63,7 @@ export class TasksController {
     }
   }
 
-  @Get('uncompleted/')
+  @Get('completed/=false')
   async FindAllUncompleted() {
     try {
       return await this.tasksService.findAllUncompleted();
